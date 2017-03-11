@@ -1,8 +1,8 @@
 package main
 
 import(
-	// "bytes"
-	"encoding/json"
+	"bytes"
+	// "encoding/json"
 	"fmt"
 	"errors"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -10,20 +10,6 @@ import(
 
 type SimpleChaincode struct{
 
-}
-
-type crowdFund struct{
-	Project_id string `json:project_id`
-	Fundraiser_id string `json:fundrasier_id`
-	Use_pople string `json:use_people`
-	Use_type string `json:`
-	Use_nums string `json:` 
-	Use_dt string `json:`
-	Use_desc string `json:use_desc`
-	Bills string `json:bills`
-	Bills_abstract string `json:bills_abstract`
-	Createdt string `json:createdt`
-	Modifydt string `json:modifydt`
 }
 
 func main(){
@@ -42,7 +28,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface,function strin
 	if function  == "write"{
 		return t.write(stub,args)
 	} 
-	
 
 	return nil, errors.New("Unsupported operation")
 }
@@ -61,20 +46,21 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface,args []string) 
 	createdt :=args[10]
 	modifydt :=args[11]
 
-
-	crowdFundJson:=&crowdFund{
-		Project_id:project_id,
-		Fundraiser_id:fundraiser_id,
-		Use_pople:use_pople,
-		Use_type:use_type,
-		Use_nums:use_nums,
-		Use_dt:use_dt,
-		Use_desc:use_desc,
-		Bills:bills,
-		Bills_abstract:bills_abstract,
-		Createdt:createdt,
-		Modifydt:modifydt,
-	}
+	var buffer bytes.Buffer
+	buffer.WriteString("{")
+	buffer.WriteString("project_id:"+project_id+",")
+	buffer.WriteString("fundraiser_id:"+fundraiser_id+",")
+	buffer.WriteString("use_pople:"+use_pople+",")
+	buffer.WriteString("use_type:"+use_type+",")
+	buffer.WriteString("use_nums:"+use_nums+",")
+	buffer.WriteString("use_dt:"+use_dt+",")
+	buffer.WriteString("use_desc:"+use_desc+",")
+	buffer.WriteString("bills:"+bills+",")
+	buffer.WriteString("bills_abstract:"+bills_abstract+",")
+	buffer.WriteString("createdt:"+createdt+",")
+	buffer.WriteString("modifydt:"+modifydt)
+	buffer.WriteString("}")
+	// return buffer.Bytes(),nil
 
 	_, err := stub.GetState(id)
 	if err!=nil{
@@ -86,8 +72,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface,args []string) 
 		return nil,fmt.Errorf("cann't delete fund %s",err)
 	}
 
-	crowdFundBytes,_:=json.Marshal(crowdFundJson)
-	err=stub.PutState(id,crowdFundBytes)
+	err=stub.PutState(id,buffer.Bytes())
 	if err!=nil{
 		return nil,fmt.Errorf("put fund error %s",err)
 	}
@@ -101,7 +86,6 @@ func (t *SimpleChaincode) queryFund(stub shim.ChaincodeStubInterface,args []stri
 		return nil, errors.New("get operation must include one argument, a key")
 	}
 
-	var crowdFundJson crowdFund
 	id:=args[0]
 	crowdFundBytes,err:=stub.GetState(id)
 
@@ -110,29 +94,8 @@ func (t *SimpleChaincode) queryFund(stub shim.ChaincodeStubInterface,args []stri
 	}
 
 
-	_=crowdFundBytes
-	_=crowdFundJson
-	return []byte("hello world"),nil
+	return crowdFundBytes,nil
 
-	// err=json.Unmarshal([]byte(crowdFundBytes),&crowdFundJson)
-	// if err!=nil{
-	// 	return nil,fmt.Errorf("unmarshal error : %s ",err)
-	// }
-
-	// var buffer bytes.Buffer
-	// buffer.WriteString("{")
-	// buffer.WriteString("project_id:"+crowdFundJson.Project_id+",")
-	// buffer.WriteString("fundraiser_id:"+crowdFundJson.Fundraiser_id+",")
-	// buffer.WriteString("use_pople:"+crowdFundJson.Use_pople+",")
-	// buffer.WriteString("use_type:"+crowdFundJson.Use_type+",")
-	// buffer.WriteString("use_nums:"+crowdFundJson.Use_nums+",")
-	// buffer.WriteString("use_dt:"+crowdFundJson.Use_dt+",")
-	// buffer.WriteString("use_desc:"+crowdFundJson.Use_desc+",")
-	// buffer.WriteString("bills_abstract:"+crowdFundJson.Bills_abstract+",")
-	// buffer.WriteString("createdt:"+crowdFundJson.Createdt+",")
-	// buffer.WriteString("modifydt:"+crowdFundJson.Modifydt)
-	// buffer.WriteString("}")
-	// return buffer.Bytes(),nil
 }
 
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
