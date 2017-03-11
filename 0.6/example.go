@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"encoding/base64"
+	"strings"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -93,6 +94,17 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		return value, nil
 
+	case "queryFunds":
+		var json="["
+		ids:=args[0]
+		idArray := strings.Split(string(ids), "##")
+		for _, v := range idArray { 
+			value, _ := stub.GetState(v)
+			json += string(value)	
+		}
+		json+="]"
+
+		return []byte(json) ,nil
 
 	default:
 		return nil, errors.New("Unsupported operation")
