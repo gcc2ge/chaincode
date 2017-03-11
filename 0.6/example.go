@@ -19,6 +19,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"encoding/base64"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -38,6 +39,12 @@ import (
 type SimpleChaincode struct {
 }
 
+const (  
+    base64Table = "123QRSTUabcdVWXYZHijKLAWDCABDstEFGuvwxyzGHIJklmnopqr234560178912"  
+)  
+  
+var coder = base64.NewEncoding(base64Table)
+
 // Init is a no-op
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	return nil, nil
@@ -51,38 +58,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	switch function {
 	case "write":
 		id:=args[0]
-		project_id :=args[1]
-		fundraiser_id :=args[2]
-		use_pople :=args[3]
-		use_type :=args[4]
-		use_nums :=args[5]
-		use_dt :=args[6]
-		use_desc :=args[7]
-		bills :=args[8]
-		bills_abstract :=args[9]
-		createdt :=args[10]
-		modifydt :=args[11]
+		json:=args[1]
 
-		var json=""
-		json+="{"
-		json+="id:"+id+","
-		json+="project_id:"+project_id+","
-		json+="fundraiser_id:"+fundraiser_id+","
-		json+="use_pople:"+use_pople+","
-		json+="use_type:"+use_type+","
-		json+="use_nums:"+use_nums+","
-		json+="use_dt:"+use_dt+","
-		json+="use_desc:"+use_desc+","
-		json+="bills:"+bills+","
-		json+="bills_abstract:"+bills_abstract+","
-		json+="createdt:"+createdt+","
-		json+="modifydt:"+modifydt
-		json+="}"
-		// return buffer.Bytes(),nil
-		
-		_=json
-		_=id
-		err:=stub.PutState(string(id),[]byte(json))
+
+		jsonByte,_:=coder.DecodeString(string(json))
+		err:=stub.PutState(string(id),jsonByte)
 		if err!=nil{
 			return nil,fmt.Errorf("put fund error %s",err)
 		}
