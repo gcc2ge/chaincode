@@ -1,7 +1,7 @@
 package main
 
 import(
-	"bytes"
+	// "bytes"
 	"encoding/json"
 	"fmt"
 	"errors"
@@ -109,27 +109,30 @@ func (t *SimpleChaincode) queryFund(stub shim.ChaincodeStubInterface,args []stri
 		return nil, fmt.Errorf("failed to get fund : %s", err)
 	}
 
-	return crowdFundBytes,nil
-	
-	err=json.Unmarshal([]byte(crowdFundBytes),&crowdFundJson)
-	if err!=nil{
-		return nil,fmt.Errorf("unmarshal error : %s ",err)
-	}
 
-	var buffer bytes.Buffer
-	buffer.WriteString("{")
-	buffer.WriteString("project_id:"+crowdFundJson.Project_id+",")
-	buffer.WriteString("fundraiser_id:"+crowdFundJson.Fundraiser_id+",")
-	buffer.WriteString("use_pople:"+crowdFundJson.Use_pople+",")
-	buffer.WriteString("use_type:"+crowdFundJson.Use_type+",")
-	buffer.WriteString("use_nums:"+crowdFundJson.Use_nums+",")
-	buffer.WriteString("use_dt:"+crowdFundJson.Use_dt+",")
-	buffer.WriteString("use_desc:"+crowdFundJson.Use_desc+",")
-	buffer.WriteString("bills_abstract:"+crowdFundJson.Bills_abstract+",")
-	buffer.WriteString("createdt:"+crowdFundJson.Createdt+",")
-	buffer.WriteString("modifydt:"+crowdFundJson.Modifydt)
-	buffer.WriteString("}")
-	return buffer.Bytes(),nil
+	_=crowdFundBytes
+	_=crowdFundJson
+	return []byte("hello world"),nil
+
+	// err=json.Unmarshal([]byte(crowdFundBytes),&crowdFundJson)
+	// if err!=nil{
+	// 	return nil,fmt.Errorf("unmarshal error : %s ",err)
+	// }
+
+	// var buffer bytes.Buffer
+	// buffer.WriteString("{")
+	// buffer.WriteString("project_id:"+crowdFundJson.Project_id+",")
+	// buffer.WriteString("fundraiser_id:"+crowdFundJson.Fundraiser_id+",")
+	// buffer.WriteString("use_pople:"+crowdFundJson.Use_pople+",")
+	// buffer.WriteString("use_type:"+crowdFundJson.Use_type+",")
+	// buffer.WriteString("use_nums:"+crowdFundJson.Use_nums+",")
+	// buffer.WriteString("use_dt:"+crowdFundJson.Use_dt+",")
+	// buffer.WriteString("use_desc:"+crowdFundJson.Use_desc+",")
+	// buffer.WriteString("bills_abstract:"+crowdFundJson.Bills_abstract+",")
+	// buffer.WriteString("createdt:"+crowdFundJson.Createdt+",")
+	// buffer.WriteString("modifydt:"+crowdFundJson.Modifydt)
+	// buffer.WriteString("}")
+	// return buffer.Bytes(),nil
 }
 
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
