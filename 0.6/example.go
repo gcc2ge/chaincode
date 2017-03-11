@@ -65,6 +65,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 		var json=""
 		json+="{"
+		json+="id:"+id,
 		json+="project_id:"+project_id+","
 		json+="fundraiser_id:"+fundraiser_id+","
 		json+="use_pople:"+use_pople+","
