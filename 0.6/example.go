@@ -109,9 +109,11 @@ func (t *SimpleChaincode) queryFund(stub shim.ChaincodeStubInterface,args []stri
 		return nil, fmt.Errorf("failed to get fund : %s", err)
 	}
 
+	return crowdFundBytes,nil
+	
 	err=json.Unmarshal([]byte(crowdFundBytes),&crowdFundJson)
 	if err!=nil{
-		return nil,fmt.Errorf("failed to delete state: %s ",err)
+		return nil,fmt.Errorf("unmarshal error : %s ",err)
 	}
 
 	var buffer bytes.Buffer
