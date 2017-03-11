@@ -46,20 +46,20 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface,args []string) 
 	createdt :=args[10]
 	modifydt :=args[11]
 
-	var buffer bytes.Buffer
-	buffer.WriteString("{")
-	buffer.WriteString("project_id:"+project_id+",")
-	buffer.WriteString("fundraiser_id:"+fundraiser_id+",")
-	buffer.WriteString("use_pople:"+use_pople+",")
-	buffer.WriteString("use_type:"+use_type+",")
-	buffer.WriteString("use_nums:"+use_nums+",")
-	buffer.WriteString("use_dt:"+use_dt+",")
-	buffer.WriteString("use_desc:"+use_desc+",")
-	buffer.WriteString("bills:"+bills+",")
-	buffer.WriteString("bills_abstract:"+bills_abstract+",")
-	buffer.WriteString("createdt:"+createdt+",")
-	buffer.WriteString("modifydt:"+modifydt)
-	buffer.WriteString("}")
+	var json=""
+	json+="{"
+	json+="project_id:"+project_id+","
+	json+="fundraiser_id:"+fundraiser_id+","
+	json+="use_pople:"+use_pople+","
+	json+="use_type:"+use_type+","
+	json+="use_nums:"+use_nums+","
+	json+="use_dt:"+use_dt+","
+	json+="use_desc:"+use_desc+","
+	json+="bills:"+bills+","
+	json+="bills_abstract:"h+bills_abstract+","
+	json+="createdt:"+createdt+","
+	json+="modifydt:"+modifydt
+	json+="}"
 	// return buffer.Bytes(),nil
 
 	_, err := stub.GetState(id)
@@ -72,7 +72,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface,args []string) 
 		return nil,fmt.Errorf("cann't delete fund %s",err)
 	}
 
-	err=stub.PutState(id,buffer.Bytes())
+	err=stub.PutState(id,[]byte(json))
 	if err!=nil{
 		return nil,fmt.Errorf("put fund error %s",err)
 	}
