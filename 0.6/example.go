@@ -1,7 +1,7 @@
 package main
 
 import(
-	"bytes"
+	// "bytes"
 	// "encoding/json"
 	"fmt"
 	"errors"
@@ -56,7 +56,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface,args []string) 
 	json+="use_dt:"+use_dt+","
 	json+="use_desc:"+use_desc+","
 	json+="bills:"+bills+","
-	json+="bills_abstract:"h+bills_abstract+","
+	json+="bills_abstract:"+bills_abstract+","
 	json+="createdt:"+createdt+","
 	json+="modifydt:"+modifydt
 	json+="}"
