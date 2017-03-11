@@ -79,16 +79,19 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		json+="}"
 		// return buffer.Bytes(),nil
 
-		_, err := stub.GetState(id)
+		tmp, err := stub.GetState(id)
 		if err!=nil{
 			return nil,fmt.Errorf("no fund found %s",err)
 		}
 
-		err = stub.DelState(id) 
-		if err!=nil{
-			return nil,fmt.Errorf("cann't delete fund %s",err)
+		if tmp !=nil{
+			err = stub.DelState(id) 
+			if err!=nil{
+				return nil,fmt.Errorf("cann't delete fund %s",err)
+			}	
 		}
-
+		
+		_=json
 		err=stub.PutState(id,[]byte("hello world"))
 		if err!=nil{
 			return nil,fmt.Errorf("put fund error %s",err)
