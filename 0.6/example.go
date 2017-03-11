@@ -99,7 +99,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		ids:=args[0]
 		idArray := strings.Split(string(ids), "##")
 		for _, v := range idArray { 
-			value, _ := stub.GetState(v)
+			value, _ := stub.GetState(string(v))
 			json += string(value)	
 		}
 		json+="]"
